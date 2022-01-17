@@ -205,23 +205,23 @@ public class BattleSystem : MonoBehaviour
             //キーボードの下を入力するとRun、上を入力するとFightになる
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (currentAction < 1)
-                {
-                    currentAction++;
-                }
-
+                currentAction++;
             }
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (currentAction > 0)
-                {
-                    currentAction--;
-                }
-
+                currentAction--;
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                currentAction++;
+            }
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                currentAction--;
             }
 
-            //色をつけてどちらを選択してるかわかるようにする
-            dialogBox.UpdateActionSelection(currentAction);
+        //色をつけてどちらを選択してるかわかるようにする
+        dialogBox.UpdateActionSelection(currentAction);
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
