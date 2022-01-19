@@ -20,6 +20,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleHud playerHud;
     [SerializeField] BattleHud enemyHud;
     [SerializeField] BattleDialogBox dialogBox;
+    [SerializeField] PartyScreen partyScreen;
     //[SerializeField] GameController gameController;
 
     //バトルシステムとの相互依存を解消：UnityAction(関数を登録する)
@@ -46,7 +47,7 @@ public class BattleSystem : MonoBehaviour
         //モンスターの生成と描画
         playerUnit.Setup(playerParty.GetHealthyPokemon()); //plsyerの戦闘可能ポケモンをセット
         enemyUnit.Setup(wildPokemon);  //野生ポケモンをセット
-
+        partyScreen.Init();
         playerHud.SetData(playerUnit.Pokemon);//HUDの描画
         enemyHud.SetData(enemyUnit.Pokemon);
         dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
@@ -70,6 +71,14 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableDialogText(false);
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableMoveSelector(true);
+    }
+
+    void OpenPartyAction()
+    {
+        partyScreen.gameObject.SetActive(true);
+        partyScreen.SetPartyData(playerParty.Pokemons);
+        //パーティスクリーンを表示
+        //ポケモンデータを反映
     }
 
     //PlayerMoveの実行
@@ -203,31 +212,40 @@ public class BattleSystem : MonoBehaviour
         void HandleActionSelection()
         {
             //キーボードの下を入力するとRun、上を入力するとFightになる
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            //0:fight  1:Bag
+            //2:Pokemon3:Run
+
+            if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                if (currentAction < 1)
-                {
-                    currentAction++;
-                }
-
+                currentAction++;
             }
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                if (currentAction > 0)
-                {
-                    currentAction--;
-                }
-
+                currentAction--;
             }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                currentAction += 2;
+            }
+            else if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                currentAction -= 2;
+            }
+        currentAction = Mathf.Clamp(currentAction, 0, 3);
 
-            //色をつけてどちらを選択してるかわかるようにする
-            dialogBox.UpdateActionSelection(currentAction);
+        //色をつけてどちらを選択してるかわかるようにする
+        dialogBox.UpdateActionSelection(currentAction);
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
                 if (currentAction == 0)
                 {
                     PlayerMove();
+                }
+                if(currentAction == 2)
+                {
+                OpenPartyAction();
+
                 }
 
             }
@@ -238,39 +256,31 @@ public class BattleSystem : MonoBehaviour
             //キーボードの下を入力するとRun、上を入力するとFightになる
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                if (currentMove < playerUnit.Pokemon.Moves.Count - 1)
-                {
-                    currentMove++;
-                }
+            currentMove++;
 
             }
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                if (currentMove > 0)
-                {
-                    currentMove--;
-                }
+            currentMove--;
+
 
             }
             if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                if (currentAction < playerUnit.Pokemon.Moves.Count - 2)
-                {
-                    currentAction += 2;
-                }
+            currentMove += 2;
 
             }
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
-                if (currentAction > 0)
-                {
-                    currentAction -= 2;
-                }
+            currentMove -= 2;
 
             }
 
-            //色をつけてどちらを選択してるかわかるようにする
-            dialogBox.UpdateMoveSelection(currentMove, playerUnit.Pokemon.Moves[currentMove]);
+        currentMove = Mathf.Clamp(currentMove, 0, playerUnit.Pokemon.Moves.Count - 1);
+
+
+        //色をつけてどちらを選択してるかわかるようにする
+        dialogBox.UpdateMoveSelection(currentMove, playerUnit.Pokemon.Moves[currentMove]);
 
             if (Input.GetKeyDown(KeyCode.Z))
             {
