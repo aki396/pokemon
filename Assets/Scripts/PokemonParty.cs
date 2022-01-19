@@ -9,6 +9,8 @@ public class PokemonParty : MonoBehaviour
       //トレーナーのポケモンを管理
       [SerializeField] List<Pokemon> pokemons;
 
+    public List<Pokemon> Pokemons { get => pokemons;}
+
     private void Start()
     {
         //ゲーム開始時に初期化

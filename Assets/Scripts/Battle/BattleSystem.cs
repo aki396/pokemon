@@ -20,6 +20,7 @@ public class BattleSystem : MonoBehaviour
     [SerializeField] BattleHud playerHud;
     [SerializeField] BattleHud enemyHud;
     [SerializeField] BattleDialogBox dialogBox;
+    [SerializeField] PartyScreen partyScreen;
     //[SerializeField] GameController gameController;
 
     //バトルシステムとの相互依存を解消：UnityAction(関数を登録する)
@@ -46,7 +47,7 @@ public class BattleSystem : MonoBehaviour
         //モンスターの生成と描画
         playerUnit.Setup(playerParty.GetHealthyPokemon()); //plsyerの戦闘可能ポケモンをセット
         enemyUnit.Setup(wildPokemon);  //野生ポケモンをセット
-
+        partyScreen.Init();
         playerHud.SetData(playerUnit.Pokemon);//HUDの描画
         enemyHud.SetData(enemyUnit.Pokemon);
         dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
@@ -70,6 +71,14 @@ public class BattleSystem : MonoBehaviour
         dialogBox.EnableDialogText(false);
         dialogBox.EnableActionSelector(false);
         dialogBox.EnableMoveSelector(true);
+    }
+
+    void OpenPartyAction()
+    {
+        partyScreen.gameObject.SetActive(true);
+        partyScreen.SetPartyData(playerParty.Pokemons);
+        //パーティスクリーンを表示
+        //ポケモンデータを反映
     }
 
     //PlayerMoveの実行
@@ -232,6 +241,11 @@ public class BattleSystem : MonoBehaviour
                 if (currentAction == 0)
                 {
                     PlayerMove();
+                }
+                if(currentAction == 2)
+                {
+                OpenPartyAction();
+
                 }
 
             }

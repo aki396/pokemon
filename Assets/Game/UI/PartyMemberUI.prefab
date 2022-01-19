@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3601091097867381086}
   - component: {fileID: 4172552143794347463}
   - component: {fileID: 3244651261520393158}
-  - component: {fileID: 2342921166363352465}
+  - component: {fileID: 4627276542741223176}
   m_Layer: 0
   m_Name: PartyMemberUI
   m_TagString: Untagged
@@ -79,7 +79,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2342921166363352465
+--- !u!114 &4627276542741223176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 523051430523332517}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 609494586604cac468d6729873ddbeb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 13c1ff3163e66cc4b901e703a8a6c688, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 2812850982386023873}

@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PartyMemberUI : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] Text nameText;
+    [SerializeField] Text levelText;
+    [SerializeField] HPBar hpBar;
 
-    // Update is called once per frame
-    void Update()
+    Pokemon _pokemon;
+    public void SetData(Pokemon pokemon)
     {
-        
+        _pokemon = pokemon;
+        nameText.text = pokemon.Base.Name;
+        levelText.text = "LV" + pokemon.Level;
+        hpBar.SetHP((float)pokemon.HP / pokemon.MaxHP);
     }
 }
