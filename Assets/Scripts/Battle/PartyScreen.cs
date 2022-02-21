@@ -9,6 +9,8 @@ public class PartyScreen : MonoBehaviour
     //ポケモン選択画面の管理
     PartyMemberUI[] memberSlots;
 
+    List<Pokemon> pokemons;
+
     //PartyMemberUIの取得
     public void Init()
     {
@@ -19,6 +21,7 @@ public class PartyScreen : MonoBehaviour
     //BattleSystemから手持ちのポケモンデータをもらって、それぞれにデータをセットする
     public void SetPartyData(List<Pokemon> pokemons)
     {
+        this.pokemons = pokemons;
         for (int i = 0; i < memberSlots.Length; i++)
         {
             if(i < pokemons.Count)
@@ -33,5 +36,23 @@ public class PartyScreen : MonoBehaviour
             }
         }
         messageText.text = "ポケモンを選択してください";
+    }
+
+    public void UpdateMemberSelection(int selectedMember)
+    {
+        //selectedMemberと一致するなら名前の色をかえる
+        for(int i=0; i < pokemons.Count; i++)
+        {
+            if (i == selectedMember)
+            {
+                //色を変える
+                memberSlots[i].SetSelected(true);
+            }
+            else
+            {
+                //色を黒色
+                memberSlots[i].SetSelected(false);
+            }
+        }    
     }
 }
