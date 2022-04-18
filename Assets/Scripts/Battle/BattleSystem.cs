@@ -163,17 +163,7 @@ public class BattleSystem : MonoBehaviour
             }
             else
             {
-                //nextをセット
-                //モンスターの生成と描画
-                playerUnit.Setup(nextPokemon); //plsyerの戦闘可能ポケモンをセット
-                playerHud.SetData(playerUnit.Pokemon);//HUDの描画
-                dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
-                // dialogBox.SetDialog($"A wild {enemyUnit.Pokemon.Base.Name}apeared.");
-                yield return dialogBox.TypeDialog($"いけ{playerUnit.Pokemon.Base.Name}！");
-
-                //メッセージがでて、1秒後にActionSerectorを表示する
-                yield return new WaitForSeconds(1);
-                PlayerAction();
+                OpenPartyAction();
             }
         }
         else
@@ -336,8 +326,70 @@ public class BattleSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             //モンスター決定
+            Pokemon selectedMember = playerParty.Pokemons[currentMember];
+            //入れ替える：現在のキャラと戦闘不能は無理
+            if (selectedMember.HP <= 0)
+            {
+                partyScreen.SetMessage("そのモンスターは瀕死です");
+                return;
+            }
+            if (selectedMember == playerUnit.Pokemon)
+            {
+                partyScreen.SetMessage("同じモンスターです。");
+                return;
+            }
+
+            //ポケモン選択画面を消す
+            partyScreen.gameObject.SetActive(false);
+            //状態をBUSYにする
+            state = BattleState.Busy;
+            //入れ替えの処理をする
+            StartCoroutine(SwitchPokemon(selectedMember));
+
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            //ポケモン選択画面を閉じたい
+            partyScreen.gameObject.SetActive(false);
+            PlayerAction();
 
         }
     }
-    
+    IEnumerator SwitchPokemon(Pokemon newPokemon)
+    {
+        //前のやつを下げる
+        //修正：戦闘不能なら戻れはいらない＆相手のターンにならない
+        bool fainted = playerUnit.Pokemon.HP <= 0;
+        if (!fainted)
+        {
+            yield return dialogBox.TypeDialog($"戻れ{playerUnit.Pokemon.Base.Name}!");
+            playerUnit.PlayerFaintAnimation();
+            yield return new WaitForSeconds(1.5f);
+        }
+
+
+        //新しいのをセット
+        //nextをセット
+        //モンスターの生成と描画
+        playerUnit.Setup(newPokemon); //plsyerの戦闘可能ポケモンをセット
+        playerHud.SetData(playerUnit.Pokemon);//HUDの描画
+        dialogBox.SetMoveNames(playerUnit.Pokemon.Moves);
+        // dialogBox.SetDialog($"A wild {enemyUnit.Pokemon.Base.Name}apeared.");
+        yield return dialogBox.TypeDialog($"いけ{playerUnit.Pokemon.Base.Name}！");
+
+        if (fainted)
+        {
+            PlayerAction();
+        }
+        else
+        {
+            //メッセージがでて、1秒後にActionSerectorを表示する
+            StartCoroutine(EnemyMove());
+        }
+
+
+        //PlayerAction();戦闘不能での入れ替えなら自分のターン
+    }
+
+
 }
