@@ -12,6 +12,7 @@ public enum BattleState
     PlayerMove,   //技選択
     EnemyMove,
     Busy,
+    PartyScreen,  //ポケモン選択状態
 }
 public class BattleSystem : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class BattleSystem : MonoBehaviour
     BattleState state;
     int currentAction; // 0:Fight 1:Run
     int currentMove; // 0:左上　1:右上　2:左下 3:右下
+    int currentMember;
 
     //これらの変数をどこから取得するの？
     PokemonParty playerParty;
@@ -75,6 +77,7 @@ public class BattleSystem : MonoBehaviour
 
     void OpenPartyAction()
     {
+        state = BattleState.PartyScreen;
         partyScreen.gameObject.SetActive(true);
         partyScreen.SetPartyData(playerParty.Pokemons);
         //パーティスクリーンを表示
@@ -207,7 +210,11 @@ public class BattleSystem : MonoBehaviour
             {
                 HandleMoveSelection();
             }
-        }
+            else if (state == BattleState.PartyScreen)
+            {
+                HandlePartySelection();
+            }
+    }
         //PlayerActionでの行動を処理する
         void HandleActionSelection()
         {
@@ -294,5 +301,53 @@ public class BattleSystem : MonoBehaviour
 
             }
         }
-    
+        void HandlePartySelection()
+    {
+        //キーボードの下を入力するとRun、上を入力するとFightになる
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            currentMember++;
+
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            currentMember--;
+
+
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            currentMember += 2;
+
+        }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            currentMember -= 2;
+
+        }
+
+        currentMember = Mathf.Clamp(currentMember, 0, playerParty.Pokemons.Count - 1);
+
+        //選択中のモンスター名に色をつける
+        partyScreen.UpdateMemberSelection(currentMember);
+
+        //色をつけてどちらを選択してるかわかるようにする
+       // dialogBox.UpdateMoveSelection(currentMove, playerUnit.Pokemon.Moves[currentMove]);
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            //モンスター決定
+
+
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            //ポケモン選択画面を閉じたい
+            partyScreen.gameObject.SetActive(false);
+            PlayerAction();
+        }
+    }
 }
+
+
+
