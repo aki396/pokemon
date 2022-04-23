@@ -13,6 +13,7 @@ public class BattleUnit : MonoBehaviour
     [SerializeField] bool isPlayerUnit;
 
     public Pokemon Pokemon { get; set; }
+    public bool IsPlayerUnit { get => isPlayerUnit; }
 
     Vector3 originalPos;
     Color originalColor;
